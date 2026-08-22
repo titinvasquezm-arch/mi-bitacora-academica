@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lector de Resúmenes Académicos - Bitácora Académica.">
+  <title>Cargando Artículo... | Bitácora Académica</title>
+  
+  <!-- Google Fonts: Lora (Serif) & Inter (Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS Play CDN with Typography Plugin -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  
+  <!-- Marked.js library for Markdown compilation -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Lora', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            bordeaux: {
+              50: '#fdf2f4',
+              100: '#fbe5e9',
+              200: '#f7ccd5',
+              300: '#f0a4b4',
+              400: '#e3718b',
+              500: '#d04365',
+              600: '#b8274d',
+              700: '#9b1c3d',
+              800: '#811a36',
+              900: '#6b1228', // Bordeaux principal
+              950: '#3b0512',
+            },
+            dark: {
+              950: '#0a0a0c', // Negro grisáceo muy desaturado
+              900: '#141417', // Gris muy desaturado
+              850: '#1d1e22',
+              800: '#27282d',
+              700: '#3f414a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles for Article, Scrollbars, and Selection -->
+  <style type="text/css">
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    h1, h2, h3, h4, .font-serif {
+      font-family: 'Lora', Georgia, serif;
+    }
+    ::selection {
+      background-color: #6b1228;
+      color: #f1f5f9;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27282d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6b1228;
+    }
+
+    /* Zen Mode styles mapping */
+    body.zen-mode-active header,
+    body.zen-mode-active footer,
+    body.zen-mode-active nav,
+    body.zen-mode-active #article-footer-nav {
+      display: none !important;
+    }
+    body.zen-mode-active main {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+
+    /* Glossary Highlight styling */
+    .glossary-highlight {
+      position: relative;
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-300 min-h-screen flex flex-col antialiased selection:bg-bordeaux-900 selection:text-white">
+
+  <!-- Floating Exit Zen Mode Button -->
+  <button id="btn-exit-zen" class="fixed top-6 right-6 px-4 py-2 rounded-lg bg-dark-900 border border-dark-800 text-slate-400 hover:text-slate-100 text-xs font-semibold uppercase tracking-wider transition-all duration-300 z-50 hidden cursor-pointer select-none">
+    Salir de Modo Zen
+  </button>
+
+  <!-- Header Section -->
+  <header class="border-b border-dark-900 sticky top-0 bg-dark-950/80 backdrop-blur-md z-50">
+    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <img src="logo.png" alt="Logo" class="h-9 w-9 object-contain rounded-md border border-dark-800">
+        <span class="font-serif text-lg font-semibold text-slate-100 group-hover:text-bordeaux-400 transition-colors duration-300">
+          Bitácora Académica
+        </span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="relative w-48 sm:w-64">
+        <input type="text" id="search-input" placeholder="Buscar apuntes..." class="w-full bg-dark-900 border border-dark-800 focus:border-bordeaux-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-300 placeholder-slate-500 focus:outline-none transition">
+        <span class="absolute left-3 top-2.5 flex items-center text-slate-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full">
+    
+    <!-- Render State Content Container -->
+    <div id="content-container">
+      <!-- Loaded dynamically via JavaScript -->
+      <div class="text-center py-20">
+        <p class="text-slate-500 font-serif text-lg animate-pulse">Cargando artículo...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="border-t border-dark-900 mt-20 bg-dark-950">
+    <div class="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-mono">
+      <div>
+        <p>© 2026 Bitácora Académica. Creado para resumir clases de Derecho.</p>
+        <p class="mt-1 text-slate-600">Visualización pública de lectura.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#top" class="hover:text-bordeaux-400 transition-colors duration-200 flex items-center gap-1">
+          Volver arriba
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7 7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script to load and parse article dynamically -->
+  <script>
+    // Get article ID from URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+    const container = document.getElementById('content-container');
+
+    // Fetch details from data.json relative file
+    fetch('data.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al cargar data.json: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const articles = data.articles || [];
+        const glossary = data.glossary || [];
+        const article = articles.find(art => art.id === articleId);
+        
+        if (article) {
+          renderArticle(article, glossary);
+        } else {
+          renderNotFound();
+        }
+      })
+      .catch(err => {
+        console.error("Error al cargar el artículo:", err);
+        container.innerHTML = `
+          <div class="text-center py-20 border border-dashed border-red-900/30 rounded-xl bg-red-950/10 my-8">
+            <h2 class="text-2xl font-semibold font-serif text-red-400 mb-2">Error de conexión</h2>
+            <p class="text-slate-500 text-sm mb-6">No se pudo cargar la base de datos de la bitácora.</p>
+            <a href="index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded bg-bordeaux-900 hover:bg-bordeaux-800 text-white font-semibold text-xs transition">
+              Volver al Inicio
+            </a>
+          </div>
+        `;
+      });
+
+    function renderArticle(article, glossary) {
+      // Set Browser Page Title
+      document.title = `${article.title} | Bitácora Académica`;
+
+      // Set Display Date
+      let displayDate = article.date;
+      const dateParts = article.date.split('-');
+      if (dateParts.length === 3) {
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        displayDate = `${parseInt(dateParts[2])} de ${months[parseInt(dateParts[1]) - 1]} de ${dateParts[0]}`;
+      }
+
+      // Convert Markdown body to HTML using Marked
+      const bodyHtml = marked.parse(article.body || '');
+
+      container.innerHTML = `
+        <!-- Navigation Back Link / Breadcrumbs -->
+        <nav class="mb-8 text-xs font-mono flex items-center gap-2 text-slate-500">
+          <a href="index.html" class="hover:text-bordeaux-400 transition-colors duration-200">Inicio</a>
+          <span>/</span>
+          <a href="index.html#materias" class="hover:text-bordeaux-400 transition-colors duration-200">${article.category}</a>
+          <span>/</span>
+          <span class="text-slate-400 truncate">${article.title.substring(0, 30)}${article.title.length > 30 ? '...' : ''}</span>
+        </nav>
+
+        <!-- Article Header -->
+        <header class="mb-12 border-b border-dark-900 pb-10">
+          <div class="flex items-center justify-between gap-3 text-xs mb-4 font-mono">
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-0.5 rounded border border-bordeaux-900/40 bg-bordeaux-950/30 text-bordeaux-400 font-semibold uppercase tracking-wider">
+                ${article.category}
+              </span>
+              <time datetime="${article.date}" class="text-slate-500">Publicado el ${displayDate}</time>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+              <button id="btn-toggle-zen" class="text-xs text-slate-400 hover:text-bordeaux-400 transition flex items-center gap-1 border border-dark-800 bg-dark-900/30 px-3 py-1.5 rounded cursor-pointer select-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Modo Zen
+              </button>
+            </div>
+          </div>
+          
+          <h1 class="text-3xl md:text-5xl font-semibold text-slate-100 leading-tight mb-6 font-serif">
+            ${article.title}
+          </h1>
+          
+          <p class="text-slate-400 text-lg md:text-xl font-light leading-relaxed max-w-3xl">
+            ${article.abstract}
+          </p>
+        </header>
+
+        <!-- Article Body -->
+        <div class="relative flex flex-col lg:flex-row gap-12">
+          <!-- Article Text Content -->
+          <article class="prose prose-slate prose-invert max-w-3xl w-full mx-auto
+            prose-headings:font-serif prose-headings:font-semibold prose-headings:text-slate-100
+            prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-dark-900 prose-h2:pb-2
+            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+            prose-p:text-slate-300 prose-p:leading-relaxed prose-p:mb-6
+            prose-a:text-bordeaux-400 hover:prose-a:text-bordeaux-300 prose-a:no-underline prose-a:border-b prose-a:border-bordeaux-900 hover:prose-a:border-bordeaux-400 prose-a:transition-all
+            prose-strong:text-slate-100 prose-strong:font-semibold
+            prose-blockquote:border-l-4 prose-blockquote:border-bordeaux-900 prose-blockquote:bg-bordeaux-950/20 prose-blockquote:text-slate-400 prose-blockquote:italic prose-blockquote:px-5 prose-blockquote:py-1 prose-blockquote:my-8 prose-blockquote:rounded-r-md
+            prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-ul:space-y-2
+            prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-6 prose-ol:space-y-2
+            prose-li:text-slate-300">
+            ${bodyHtml}
+          </article>
+        </div>
+
+        <!-- Back to top / Navigation -->
+        <div id="article-footer-nav" class="max-w-3xl mx-auto mt-16 pt-8 border-t border-dark-900 flex justify-between items-center text-sm">
+          <a href="index.html" class="inline-flex items-center gap-2 text-bordeaux-400 hover:text-bordeaux-300 transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver a la lista de artículos
+          </a>
+          <a href="#top" class="text-slate-500 hover:text-slate-300 transition-colors duration-200">
+            Subir al inicio ↑
+          </a>
+        </div>
+      `;
+
+      // 1. Highlight glossary terms
+      const articleNode = container.querySelector('article');
+      highlightGlossary(articleNode, glossary);
+
+      // 2. Zen Mode button bindings
+      const btnToggleZen = document.getElementById('btn-toggle-zen');
+      const btnExitZen = document.getElementById('btn-exit-zen');
+
+      function toggleZen() {
+        document.body.classList.toggle('zen-mode-active');
+        if (document.body.classList.contains('zen-mode-active')) {
+          btnExitZen.classList.remove('hidden');
+        } else {
+          btnExitZen.classList.add('hidden');
+        }
+      }
+
+      if (btnToggleZen) btnToggleZen.onclick = toggleZen;
+      if (btnExitZen) btnExitZen.onclick = toggleZen;
+    }
+
+    function renderNotFound() {
+      container.innerHTML = `
+        <div class="text-center py-20 border border-dashed border-dark-800 rounded-xl my-8">
+          <h2 class="text-2xl font-semibold font-serif text-slate-200 mb-2">Artículo no encontrado</h2>
+          <p class="text-slate-500 text-sm mb-6">El resumen académico con el identificador solicitado no existe o fue eliminado.</p>
+          <a href="index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded bg-bordeaux-900 hover:bg-bordeaux-800 text-white font-semibold text-xs transition">
+            Volver al Inicio
+          </a>
+        </div>
+      `;
+    }
+
+    // Bind Search Input keydown for redirection
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const query = searchInput.value.trim();
+        window.location.href = `index.html?search=${encodeURIComponent(query)}`;
+      }
+    });
+
+    // Glossary DOM highlighting engine
+    function highlightGlossary(element, glossary) {
+      if (!glossary || glossary.length === 0) return;
+      
+      const sortedGlossary = [...glossary].sort((a, b) => b.term.length - a.term.length);
+      
+      function walk(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          let text = node.nodeValue;
+          let parent = node.parentNode;
+          
+          if (parent.tagName === 'A' || parent.tagName === 'CODE' || parent.tagName === 'PRE' || parent.classList.contains('glossary-highlight')) {
+            return;
+          }
+          
+          for (let item of sortedGlossary) {
+            const escapedTerm = item.term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const regex = new RegExp('\\b(' + escapedTerm + ')\\b', 'gi');
+            
+            if (regex.test(text)) {
+              const fragment = document.createDocumentFragment();
+              let lastIdx = 0;
+              text.replace(regex, (match, p1, offset) => {
+                fragment.appendChild(document.createTextNode(text.substring(lastIdx, offset)));
+                
+                const span = document.createElement('span');
+                span.className = 'glossary-highlight border-b border-dashed border-bordeaux-500 hover:border-bordeaux-400 text-slate-200 hover:text-bordeaux-400 cursor-help relative group inline-block font-semibold transition duration-150';
+                span.textContent = match;
+                
+                const tooltip = document.createElement('span');
+                tooltip.className = 'invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-dark-900 text-slate-300 text-xs font-normal font-sans p-3 rounded-lg border border-dark-800 shadow-2xl transition duration-200 z-50 text-left leading-relaxed';
+                tooltip.innerHTML = `<strong class="text-bordeaux-400 block mb-1 font-serif font-medium">${item.term}</strong>${item.definition}`;
+                span.appendChild(tooltip);
+                
+                fragment.appendChild(span);
+                lastIdx = offset + match.length;
+              });
+              
+              fragment.appendChild(document.createTextNode(text.substring(lastIdx)));
+              parent.replaceChild(fragment, node);
+              break; 
+            }
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE && node.hasChildNodes()) {
+          const children = Array.from(node.childNodes);
+          for (let child of children) {
+            walk(child);
+          }
+        }
+      }
+      
+      walk(element);
+    }
+  </script>
+</body>
+</html>

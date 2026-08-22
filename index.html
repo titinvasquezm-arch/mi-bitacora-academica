@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bitácora Académica - Resúmenes, apuntes y reflexiones sobre Derecho y Ciencias Jurídicas.">
+  <title>Bitácora Académica | Diario de Estudio</title>
+  
+  <!-- Google Fonts: Lora (Serif) & Inter (Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS Play CDN with Typography Plugin -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Lora', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            bordeaux: {
+              50: '#fdf2f4',
+              100: '#fbe5e9',
+              200: '#f7ccd5',
+              300: '#f0a4b4',
+              400: '#e3718b',
+              500: '#d04365',
+              600: '#b8274d',
+              700: '#9b1c3d',
+              800: '#811a36',
+              900: '#6b1228', // Bordeaux principal
+              950: '#3b0512',
+            },
+            dark: {
+              950: '#0a0a0c', // Negro grisáceo muy desaturado
+              900: '#141417', // Gris muy desaturado
+              850: '#1d1e22',
+              800: '#27282d',
+              700: '#3f414a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles for Scrollbars, Selection, & Fine-tuning -->
+  <style type="text/css">
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    h1, h2, h3, h4, .font-serif {
+      font-family: 'Lora', Georgia, serif;
+    }
+    ::selection {
+      background-color: #6b1228;
+      color: #f1f5f9;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27282d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6b1228;
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-300 min-h-screen flex flex-col antialiased selection:bg-bordeaux-900 selection:text-white">
+
+  <!-- Header Section -->
+  <header class="border-b border-dark-900 sticky top-0 bg-dark-950/80 backdrop-blur-md z-50">
+    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <img src="logo.png" alt="Logo" class="h-9 w-9 object-contain rounded-md border border-dark-800">
+        <span class="font-serif text-lg font-semibold text-slate-100 group-hover:text-bordeaux-400 transition-colors duration-300">
+          Bitácora Académica
+        </span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="relative w-48 sm:w-64">
+        <input type="text" id="search-input" placeholder="Buscar apuntes..." class="w-full bg-dark-900 border border-dark-800 focus:border-bordeaux-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-300 placeholder-slate-500 focus:outline-none transition">
+        <span class="absolute left-3 top-2.5 flex items-center text-slate-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full">
+    
+    <!-- Hero / Intro Header -->
+    <section class="max-w-3xl mb-16">
+      <p class="text-xs uppercase tracking-widest text-bordeaux-500 font-semibold mb-3">Diario de Aprendizaje</p>
+      <h1 class="text-4xl md:text-5xl font-semibold text-slate-100 leading-tight mb-4">
+        Apuntes, doctrina y análisis del derecho
+      </h1>
+      <p class="text-slate-400 text-lg font-light leading-relaxed">
+        Un espacio de síntesis y estudio donde documento los conceptos jurídicos clave, la evolución jurisprudencial y las lecciones aprendidas en la facultad.
+      </p>
+    </section>
+
+    <!-- Catalogation Section (Subjects Filter) -->
+    <section id="materias" class="mb-14 scroll-mt-24">
+      <div class="border-b border-dark-900 pb-4 mb-6 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Filtrar por Materia</h2>
+      </div>
+      
+      <!-- Subjects Badge List -->
+      <div id="subjects-container" class="flex flex-wrap gap-2.5">
+        <!-- Will be populated dynamically via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Articles List Section -->
+    <section class="max-w-4xl">
+      <div class="border-b border-dark-900 pb-4 mb-8 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Últimos Artículos y Resúmenes</h2>
+      </div>
+
+      <!-- Articles Feed -->
+      <div id="articles-container" class="space-y-12">
+        <!-- Will be populated dynamically via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Glossary Section -->
+    <section class="max-w-4xl mt-20 pt-12 border-t border-dark-900">
+      <div class="pb-6 mb-6 flex items-center justify-between border-b border-dark-900/60">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">Glosario de Conceptos</h2>
+          <p class="text-slate-500 text-xs font-sans">Los términos definidos aquí se resaltarán automáticamente al leer tus artículos.</p>
+        </div>
+      </div>
+      
+      <!-- Glossary Cards Grid -->
+      <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Will be populated dynamically via JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="border-t border-dark-900 mt-20 bg-dark-950">
+    <div class="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-mono">
+      <div>
+        <p>© 2026 Bitácora Académica. Creado para resumir clases de Derecho.</p>
+        <p class="mt-1 text-slate-600">Visualización pública de lectura.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#top" class="hover:text-bordeaux-400 transition-colors duration-200 flex items-center gap-1">
+          Volver arriba
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7 7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- State & Dynamic Rendering Logic -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Arrays representing state (loaded from data.json)
+    let subjects = [];
+    let articles = [];
+    let glossary = [];
+    let activeFilter = "Todas";
+
+    // Select DOM Elements
+    const subjectsContainer = document.getElementById('subjects-container');
+    const articlesContainer = document.getElementById('articles-container');
+    const glossaryContainer = document.getElementById('glossary-container');
+    const searchInput = document.getElementById('search-input');
+
+    // Render Functions
+    function renderSubjects() {
+      subjectsContainer.innerHTML = '';
+      
+      // "All" filter button
+      const allBtn = document.createElement('button');
+      allBtn.className = `px-4 py-2 text-xs font-semibold tracking-wide rounded-full border transition-all duration-300 cursor-pointer ${
+        activeFilter === 'Todas' 
+          ? 'border-bordeaux-900 bg-bordeaux-950/40 text-bordeaux-300 shadow shadow-bordeaux-950/50' 
+          : 'border-dark-800 bg-dark-900/50 text-slate-400 hover:border-bordeaux-800 hover:bg-bordeaux-950/20 hover:text-bordeaux-300'
+      }`;
+      allBtn.textContent = 'Todas las materias';
+      allBtn.onclick = () => {
+        activeFilter = 'Todas';
+        renderSubjects();
+        renderArticles();
+      };
+      subjectsContainer.appendChild(allBtn);
+
+      // Category buttons
+      subjects.forEach(subj => {
+        const btn = document.createElement('button');
+        btn.className = `px-4 py-2 text-xs font-semibold tracking-wide rounded-full border transition-all duration-300 cursor-pointer ${
+          activeFilter === subj 
+            ? 'border-bordeaux-900 bg-bordeaux-950/40 text-bordeaux-300 shadow shadow-bordeaux-950/50' 
+            : 'border-dark-800 bg-dark-900/50 text-slate-400 hover:border-bordeaux-800 hover:bg-bordeaux-950/20 hover:text-bordeaux-300'
+        }`;
+        btn.textContent = subj;
+        btn.onclick = () => {
+          activeFilter = subj;
+          renderSubjects();
+          renderArticles();
+        };
+        subjectsContainer.appendChild(btn);
+      });
+    }
+
+    function renderArticles() {
+      articlesContainer.innerHTML = '';
+      
+      // Filter list by category and search query
+      const searchVal = searchInput.value.trim().toLowerCase();
+      const filteredArticles = articles.filter(art => {
+        const matchesCategory = activeFilter === 'Todas' || art.category === activeFilter;
+        const matchesSearch = !searchVal || 
+          art.title.toLowerCase().includes(searchVal) || 
+          art.abstract.toLowerCase().includes(searchVal) || 
+          (art.body && art.body.toLowerCase().includes(searchVal));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filteredArticles.length === 0) {
+        articlesContainer.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-dark-800 rounded-xl">
+            <p class="text-slate-500 font-serif text-lg">No se encontraron artículos para los criterios aplicados.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filteredArticles.forEach((art, index) => {
+        const artEl = document.createElement('article');
+        artEl.className = 'group relative flex flex-col items-start transition-all duration-300';
+        
+        let displayDate = art.date;
+        const dateParts = art.date.split('-');
+        if (dateParts.length === 3) {
+          const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+          displayDate = `${parseInt(dateParts[2])} ${months[parseInt(dateParts[1]) - 1]}, ${dateParts[0]}`;
+        }
+
+        artEl.innerHTML = `
+          <div class="flex items-center justify-between w-full mb-3">
+            <div class="flex items-center gap-3 text-xs font-mono">
+              <span class="px-2.5 py-0.5 rounded border border-bordeaux-900/40 bg-bordeaux-950/30 text-bordeaux-400 font-semibold uppercase tracking-wider">
+                ${art.category}
+              </span>
+              <time datetime="${art.date}" class="text-slate-500">${displayDate}</time>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl md:text-3xl font-semibold text-slate-100 group-hover:text-bordeaux-400 transition-colors duration-300 leading-snug mb-3">
+            <a href="articulo.html?id=${art.id}" class="outline-none focus:underline decoration-bordeaux-800 decoration-2 underline-offset-4">
+              ${art.title}
+            </a>
+          </h3>
+          
+          <p class="text-slate-400 text-base font-normal leading-relaxed mb-4 max-w-3xl">
+            ${art.abstract}
+          </p>
+
+          <a href="articulo.html?id=${art.id}" class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase text-bordeaux-400 group-hover:text-bordeaux-300 group-hover:translate-x-1 transition-all duration-300">
+            Leer artículo completo
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        `;
+        
+        articlesContainer.appendChild(artEl);
+        
+        if (index < filteredArticles.length - 1) {
+          const hr = document.createElement('hr');
+          hr.className = 'border-dark-900 my-8';
+          articlesContainer.appendChild(hr);
+        }
+      });
+    }
+
+    function renderGlossary() {
+      glossaryContainer.innerHTML = '';
+      if (glossary.length === 0) {
+        glossaryContainer.innerHTML = `
+          <div class="col-span-full text-center py-8 border border-dashed border-dark-800 rounded-xl text-slate-500 text-xs italic">
+            No hay términos definidos en el glosario.
+          </div>
+        `;
+        return;
+      }
+      
+      const sortedGlossary = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
+
+      sortedGlossary.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-dark-900/40 border border-dark-800 rounded-xl p-4 shadow hover:border-dark-750 transition';
+        card.innerHTML = `
+          <h3 class="font-serif font-semibold text-slate-100 mb-1 leading-snug">${item.term}</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">${item.definition}</p>
+        `;
+        glossaryContainer.appendChild(card);
+      });
+    }
+
+    // Search input bindings
+    searchInput.addEventListener('input', () => {
+      renderArticles();
+    });
+
+    const initialSearch = urlParams.get('search');
+    if (initialSearch) {
+      searchInput.value = decodeURIComponent(initialSearch);
+    }
+
+    // Load static data from data.json relative file
+    fetch('data.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al cargar data.json: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        subjects = data.subjects || [];
+        articles = data.articles || [];
+        glossary = data.glossary || [];
+        renderSubjects();
+        renderArticles();
+        renderGlossary();
+      })
+      .catch(err => {
+        console.error("Error al inicializar los datos:", err);
+        articlesContainer.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-red-900/30 rounded-xl bg-red-950/10">
+            <p class="text-red-400 font-serif text-lg">Error de carga de datos</p>
+            <p class="text-slate-500 text-xs mt-1">No se pudo cargar el archivo data.json de la bitácora.</p>
+          </div>
+        `;
+      });
+  </script>
+</body>
+</html>

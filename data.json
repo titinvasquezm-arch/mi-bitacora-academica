@@ -1,0 +1,28 @@
+{
+  "subjects": [
+    "Derecho Civil",
+    "Derecho Penal",
+    "Derecho Constitucional",
+    "Filosofía del Derecho"
+  ],
+  "articles": [
+    {
+      "id": "autonomia-voluntad-1",
+      "title": "El Principio de la Autonomía de la Voluntad y sus Límites Modernos",
+      "category": "Derecho Civil",
+      "date": "2026-08-21",
+      "abstract": "Un análisis sobre cómo la libertad contractual clásica se redefine bajo el influjo del orden público de protección, los contratos dirigidos y la tutela del consumidor.",
+      "body": "El dogma de la **autonomía de la voluntad** constituye el cimiento sobre el cual se edificó el derecho contractual decimonónico. Bajo la célebre fórmula formulada en los códigos napoleónicos, el contrato era concebido como una ley para las partes (*pacta sunt servanda*), asumiendo que los contratantes se encontraban en un plano de perfecta igualdad jurídica y económica.\n\n## La Decadencia de la Igualdad Contractual\n\nEn el tráfico jurídico contemporáneo, sin embargo, la premisa de la igualdad entre las partes ha quedado en gran medida obsoleta. La aparición de los **contratos de adhesión** y la contratación en masa han provocado una asimetría estructural donde una de las partes dicta unilateralmente el contenido contractual.\n\nEs aquí donde el legislador moderno se ve compelido a intervenir en la esfera privada, dando origen a lo que la doctrina denomina el **orden público de protección**.\n\n### Los Tres Límites Fundamentales\n\nHoy en día, la libertad para determinar el contenido de un negocio jurídico encuentra sus fronteras en tres conceptos esenciales:\n\n* **La Ley Imperativa:** Aquellas normas que las partes no pueden dejar de lado por voluntad propia.\n* **El Orden Público:** El conjunto de principios e instituciones políticas, económicas y morales del Estado.\n* **Las Buenas Costumbres:** El estándar ético y de moralidad social media aceptado."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Autonomía de la voluntad",
+      "definition": "Principio general de derecho que confiere a las partes la facultad de regular sus propios intereses mediante contratos, dentro de los límites de la ley imperativa, el orden público y las buenas costumbres."
+    },
+    {
+      "term": "Orden público",
+      "definition": "Conjunto de normas y principios fundamentales (políticos, jurídicos y éticos) imperativos sobre los que se estructura la convivencia social en el Estado y que la voluntad particular no puede eludir."
+    }
+  ]
+}
