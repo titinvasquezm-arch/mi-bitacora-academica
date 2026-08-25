@@ -96,6 +96,84 @@
     .glossary-highlight {
       position: relative;
     }
+
+    /* Print Styles for PDF Export */
+    @media print {
+      header, 
+      footer, 
+      nav, 
+      #article-footer-nav,
+      #btn-exit-zen,
+      #btn-toggle-zen,
+      #btn-export-pdf,
+      a[href*="admin.html"],
+      .glossary-highlight span.invisible {
+        display: none !important;
+      }
+      
+      body, html {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      
+      main {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      article {
+        color: #000000 !important;
+        max-width: 100% !important;
+        font-size: 12pt !important;
+        line-height: 1.6 !important;
+      }
+      
+      h1 {
+        font-size: 24pt !important;
+        margin-bottom: 12pt !important;
+        color: #000000 !important;
+      }
+      
+      h2 {
+        font-size: 18pt !important;
+        margin-top: 20pt !important;
+        margin-bottom: 10pt !important;
+        border-bottom: 1px solid #ddd !important;
+        padding-bottom: 4pt !important;
+        page-break-after: avoid;
+        color: #000000 !important;
+      }
+      
+      h3 {
+        font-size: 14pt !important;
+        margin-top: 16pt !important;
+        margin-bottom: 8pt !important;
+        page-break-after: avoid;
+        color: #000000 !important;
+      }
+
+      p, li {
+        color: #1a1a1a !important;
+      }
+      
+      blockquote {
+        border-left: 3px solid #666 !important;
+        background: #f9f9f9 !important;
+        color: #444444 !important;
+        padding: 8pt 12pt !important;
+        margin: 12pt 0 !important;
+        font-style: italic !important;
+      }
+      
+      h1, h2, h3, blockquote, tr {
+        page-break-inside: avoid;
+      }
+      
+      a {
+        color: #000000 !important;
+        text-decoration: underline !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-dark-950 text-slate-300 min-h-screen flex flex-col antialiased selection:bg-bordeaux-900 selection:text-white">
@@ -242,6 +320,13 @@
                 </svg>
                 Modo Zen
               </button>
+
+              <button id="btn-export-pdf" class="text-xs text-slate-400 hover:text-bordeaux-400 transition flex items-center gap-1 border border-dark-800 bg-dark-900/30 px-3 py-1.5 rounded cursor-pointer select-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Exportar PDF
+              </button>
             </div>
           </div>
           
@@ -305,6 +390,14 @@
 
       if (btnToggleZen) btnToggleZen.onclick = toggleZen;
       if (btnExitZen) btnExitZen.onclick = toggleZen;
+
+      // PDF Export click binding
+      const btnExportPdf = document.getElementById('btn-export-pdf');
+      if (btnExportPdf) {
+        btnExportPdf.onclick = () => {
+          window.print();
+        };
+      }
     }
 
     function renderNotFound() {
