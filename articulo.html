@@ -244,8 +244,8 @@
     const articleId = urlParams.get('id');
     const container = document.getElementById('content-container');
 
-    // Fetch details from data.json relative file
-    fetch('data.json')
+    // Fetch details from data.json relative file (cache-busting query to avoid browser cache)
+    fetch('data.json?v=' + Date.now())
       .then(response => {
         if (!response.ok) {
           throw new Error('Error al cargar data.json: ' + response.statusText);
